@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title><%= title %> | UTUNYANGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/dashboards.css">
+</head>
+<body>
+<%
+  const fmtRWF = n => 'RWF ' + Number(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+  const statusClass = s => ({paid:'bg-success',partial:'bg-warning text-dark',unpaid:'bg-danger',cancelled:'bg-secondary'}[s]||'bg-secondary');
+%>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark app-nav px-3">
+  <a class="navbar-brand fw-bold" href="/">UTUNYANGE</a>
+  <div class="d-flex align-items-center gap-2 text-white">
+    <span class="nav-role-tag">Admin</span>
+    <%= user.name %>
+    <a href="/dashboard/admin" class="btn btn-sm btn-outline-light">Dashboard</a>
+    <a href="/dashboard/admin/stage4-tools" class="btn btn-sm btn-outline-light">Tools</a>
+    <form class="d-inline" method="post" action="/auth/logout">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn btn-sm btn-outline-light">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<main class="container-fluid px-3 px-lg-4 py-4">
+  <div class="page-header">
+    <p class="eyebrow">SCHOOL FINANCE</p>
+    <h1>Fees &amp; Payments</h1>
+  </div>
+
+  <% if(notice){ %><div class="alert alert-success mb-3"><%= notice %></div><% } %>
+  <% if(error){  %><div class="alert alert-danger  mb-3"><%= error  %></div><% } %>
+
+  <!-- STATS ROW -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-label">Total Billed</div>
+        <div class="stat-number"><%= fmtRWF(stats.total_billed) %></div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card green">
+        <div class="stat-label">Total Collected</div>
+        <div class="stat-number"><%= fmtRWF(stats.total_collected) %></div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card red">
+        <div class="stat-label">Outstanding</div>
+        <div class="stat-number"><%= fmtRWF(stats.total_outstanding) %></div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card yellow">
+        <div class="stat-label">Invoices</div>
+        <div class="stat-number"><%= stats.total_invoices||0 %></div>
+        <div class="mt-1" style="font-size:.78rem;color:var(--muted)">
+          <span class="text-success fw-bold"><%= stats.paid_count||0 %> paid</span> &middot;
+          <span class="text-warning fw-bold"><%= stats.partial_count||0 %> partial</span> &middot;
+          <span class="text-danger fw-bold"><%= stats.unpaid_count||0 %> unpaid</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- CREATE FEE STRUCTURE -->
+    <div class="col-xl-4">
+      <section class="panel h-100">
+        <h2>Create fee structure</h2>
+        <form method="post" action="/dashboard/admin/fees/structures" class="row g-2">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="col-12">
+            <label class="form-label">Fee name</label>
+            <input class="form-control" name="name" required maxlength="160" placeholder="e.g. Tuition Fee Term 1">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Amount (RWF)</label>
+            <input class="form-control" type="number" name="amount" min="1" step="1" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Academic year</label>
+            <input class="form-control" name="academic_year" placeholder="e.g. 2026" required maxlength="20">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Term</label>
+            <select class="form-select" name="term">
+              <option>Term 1</option><option>Term 2</option><option>Term 3</option><option selected>Annual</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Applies to</label>
+            <select class="form-select" name="applies_to" id="appliesToSel">
+              <option value="all">All students</option>
+              <option value="class">Specific class</option>
+            </select>
+          </div>
+          <div class="col-12" id="classField" style="display:none">
+            <label class="form-label">Class</label>
+            <select class="form-select" name="class_id">
+              <option value="">Choose class</option>
+              <% classes.forEach(c=>{ %>
+              <option value="<%= c.id %>"><%= c.class_name %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Description</label>
+            <input class="form-control" name="description" maxlength="400">
+          </div>
+          <div class="col-12 mt-1">
+            <button class="btn btn-primary w-100">Save fee structure</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- CREATE INVOICE -->
+    <div class="col-xl-4">
+      <section class="panel h-100">
+        <h2>Issue invoice to student</h2>
+        <form method="post" action="/dashboard/admin/fees/invoices" class="row g-2">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="col-12">
+            <label class="form-label">Student</label>
+            <select class="form-select" name="student_id" required>
+              <option value="">Choose student</option>
+              <% students.forEach(s=>{ %>
+              <option value="<%= s.id %>"><%= s.full_name %> &mdash; <%= s.admission_number %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Fee structure</label>
+            <select class="form-select" name="fee_structure_id" required>
+              <option value="">Choose fee</option>
+              <% structures.filter(s=>s.is_active).forEach(s=>{ %>
+              <option value="<%= s.id %>"><%= s.name %> &mdash; RWF <%= Number(s.amount).toLocaleString() %> (<%= s.term %>)</option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Due date</label>
+            <input class="form-control" type="date" name="due_date" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Notes</label>
+            <input class="form-control" name="notes" maxlength="400">
+          </div>
+          <div class="col-12 mt-1">
+            <button class="btn btn-primary w-100">Issue invoice</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- RECORD PAYMENT -->
+    <div class="col-xl-4">
+      <section class="panel h-100">
+        <h2>Record payment</h2>
+        <form method="post" action="/dashboard/admin/fees/payments" class="row g-2">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="col-12">
+            <label class="form-label">Invoice</label>
+            <select class="form-select" name="invoice_id" required>
+              <option value="">Choose invoice</option>
+              <% invoices.filter(i=>i.status!=='paid'&&i.status!=='cancelled').forEach(i=>{ %>
+              <option value="<%= i.id %>">
+                <%= i.invoice_number %> &mdash; <%= i.student_name %> &mdash;
+                Balance: RWF <%= (Number(i.amount_due)-Number(i.amount_paid)).toLocaleString() %>
+              </option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Amount (RWF)</label>
+            <input class="form-control" type="number" name="amount" min="1" step="1" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Date paid</label>
+            <input class="form-control" type="date" name="paid_at" value="<%= new Date().toISOString().slice(0,10) %>" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Payment method</label>
+            <select class="form-select" name="payment_method">
+              <option value="cash">Cash</option>
+              <option value="bank_transfer">Bank transfer</option>
+              <option value="mobile_money">Mobile money</option>
+              <option value="cheque">Cheque</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Reference number</label>
+            <input class="form-control" name="reference_number" maxlength="100">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Notes</label>
+            <input class="form-control" name="notes" maxlength="400">
+          </div>
+          <div class="col-12 mt-1">
+            <button class="btn btn-primary w-100">Record payment</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- FEE STRUCTURES TABLE -->
+    <div class="col-xl-5">
+      <section class="panel">
+        <h2>Fee structures</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead><tr><th>Name</th><th>Amount</th><th>Year</th><th>Term</th><th>Scope</th></tr></thead>
+            <tbody>
+              <% structures.forEach(s=>{ %>
+              <tr>
+                <td><strong><%= s.name %></strong><% if(s.description){ %><small class="d-block text-muted"><%= s.description %></small><% } %></td>
+                <td class="fw-bold">RWF <%= Number(s.amount).toLocaleString() %></td>
+                <td><%= s.academic_year %></td>
+                <td><span class="badge bg-primary"><%= s.term %></span></td>
+                <td><%= s.applies_to==='class'?s.class_name||'—':'All' %></td>
+              </tr>
+              <% }) %>
+              <% if(!structures.length){ %>
+              <tr><td colspan="5" class="text-center text-muted py-3">No fee structures yet.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- INVOICES TABLE -->
+    <div class="col-xl-7">
+      <section class="panel">
+        <h2>All invoices <small class="text-muted fw-normal" style="font-size:.78rem">(last 150)</small></h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead><tr><th>Invoice #</th><th>Student</th><th>Fee</th><th>Billed</th><th>Paid</th><th>Balance</th><th>Due</th><th>Status</th></tr></thead>
+            <tbody>
+              <% invoices.forEach(i=>{ const bal=Number(i.amount_due)-Number(i.amount_paid); %>
+              <tr>
+                <td><code class="small"><%= i.invoice_number %></code></td>
+                <td><strong><%= i.student_name %></strong><small class="d-block text-muted"><%= i.class_name||'—' %></small></td>
+                <td><small><%= i.fee_name %> <span class="badge bg-light text-dark"><%= i.term %></span></small></td>
+                <td>RWF <%= Number(i.amount_due).toLocaleString() %></td>
+                <td class="text-success fw-bold">RWF <%= Number(i.amount_paid).toLocaleString() %></td>
+                <td class="<%= bal>0?'text-danger fw-bold':'' %>">RWF <%= bal.toLocaleString() %></td>
+                <td><%= i.due_date %></td>
+                <td><span class="badge <%= statusClass(i.status) %>"><%= i.status %></span></td>
+              </tr>
+              <% }) %>
+              <% if(!invoices.length){ %>
+              <tr><td colspan="8" class="text-center text-muted py-3">No invoices yet.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+  </div><!-- /row -->
+</main>
+
+<script>
+document.getElementById('appliesToSel').addEventListener('change', e => {
+  document.getElementById('classField').style.display = e.target.value === 'class' ? '' : 'none';
+});
+</script>
+</body>
+</html>

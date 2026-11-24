@@ -1,0 +1,11 @@
+const router=require("express").Router();
+const c=require("./controller");
+const {verifyCsrf}=require("../../middleware/csrf.middleware");
+router.get("/",c.page);
+router.post("/users",verifyCsrf,c.createUser);
+router.post("/classes",verifyCsrf,c.createClass);
+router.post("/subjects",verifyCsrf,c.createSubject);
+router.post("/assign-teacher",verifyCsrf,c.assignTeacher);
+router.post("/link-parent",verifyCsrf,c.linkParent);
+router.post("/assign-student-class",verifyCsrf,c.assignStudentClass);
+module.exports=router;

@@ -1,0 +1,212 @@
+
+OKAY CONTINUE FOR THIS: established the administrator and teacher dashboard foundations. Now we should make the school system useful for everyday teaching, learning and parent communication.
+
+Stage 4 features
+Student Information System - Classter
+
+1. Student dashboard
+
+Personal student profile.
+Class and subject timetable.
+Attendance history.
+Examination results and grades.
+Assignments and learning materials.
+School announcements.
+Modern Parent Dashboard UI for Education Platform by Dreams Technologies on Dribbble
+
+2. Parent dashboard
+
+View linked children.
+Monitor attendance.
+Check examination results.
+View fees and payment balances.
+Receive school announcements.
+Contact teachers and school administration.
+
+3. Attendance management
+
+Teachers mark students present, absent, late or excused.
+Daily attendance registers.
+Attendance reports.
+Parent attendance notifications (notification foundation).
+4. Academic management
+
+Create examinations and assessments.
+Enter student marks.
+Calculate grades.
+Generate student report cards.
+Publish approved results.
+Recommended development roadmap
+Stage
+
+Development
+
+4
+
+Student & parent portals, attendance and results
+
+5
+
+Assignments, lessons and e-learning
+
+6
+
+School fees, invoices and payments
+
+7
+
+Timetables, examinations and report cards
+
+8
+
+Notifications, messaging and communication
+
+9
+
+Library, transport and boarding
+
+10
+
+HR, payroll, reports and analytics
+
+11
+
+Security hardening, testing and deployment
+
+One important thing before Stage 4: Have you successfully installed Stage 3 and opened the administrator and teacher dashboards?
+
+
+I recommend confirming this first so we build on a working database and avoid breaking your existing project.
+
+…
+
+Worked for 8s
+
+
+
+
+
+Stage 4 package created
+I've prepared UTUNYANGE Stage 4 — Student & Parent Portals, Attendance and Academic Management.
+
+utunyange-stage4-student-parent-attendance-academics.zip
+
+ZIP package · 21 files
+
+Download Stage 4 ZIP
+
+What's included
+Module
+
+Features
+
+Student portal
+
+Profile, timetable, attendance, published results, announcements
+
+Parent portal
+
+Linked children, attendance, results, notifications
+
+Teacher portal
+
+Class registers, attendance recording, assessments, marks
+
+Academic management
+
+Publish results and calculate percentages
+
+Notifications
+
+Parent absence/late notifications and student result notifications
+
+Admin tools
+
+Publish announcements and create timetable entries
+
+I also checked the JavaScript files for syntax errors. This does not replace testing against your actual Stage 3 database.
+
+Installation
+1. Back up your project and database first.
+
+2. Extract the ZIP into:
+
+C:\xampp2\htdocs\UTUNYANGEbyGPT
+
+Merge the folders and keep your existing .env and Stage 2 authentication files.
+
+3. Import the database migration.
+
+Open XAMPP and start MySQL.
+
+Open phpMyAdmin.
+
+Select utunyange_school.
+
+Import:
+
+database/migrations/004_stage4.sql
+
+4. Start the project in PowerShell:
+
+cd C:\xampp2\htdocs\UTUNYANGEbyGPT
+npm run dev
+
+Open the dashboards
+Dashboard
+
+URL
+
+Administrator
+
+http://localhost:3000/dashboard/admin
+
+Admin timetable & announcements
+
+http://localhost:3000/dashboard/admin/stage4-tools
+
+Teacher
+
+http://localhost:3000/dashboard/teacher
+
+Student
+
+http://localhost:3000/dashboard/student
+
+Parent
+
+http://localhost:3000/dashboard/parent
+
+Important setup
+Before testing:
+
+Create student, teacher and parent accounts using the administrator dashboard.
+
+Assign students to classes.
+
+Assign teachers to the same classes and subjects.
+
+Link parents to their children.
+
+Add timetable entries and publish announcements from the admin tools page.
+
+Note: Parent fee balances are not active yet; those will be implemented in Stage 6. Formal report cards and configurable grading scales are also future work. Test with sample accounts and data before using real student records.
+
+What comes next?
+Stage 5 — Learning Management System (LMS)
+
+This will add lesson creation, assignment publishing, student submissions, teacher feedback, downloadable learning materials, and assignment deadlines.
+
+First, install Stage 4 and tell me whether all four dashboards open successfully.
+
+
+Context window full
+Start a new chat with an automatic summary of this conversation, or upgrade to continue here with more context available in every chat.
+
+
+     
+
+
+
+
+     

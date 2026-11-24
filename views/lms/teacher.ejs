@@ -1,0 +1,199 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title><%= title %> | UTUNYANGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/dashboards.css">
+</head>
+<body>
+<nav class="navbar navbar-dark app-nav px-3">
+  <a class="navbar-brand fw-bold" href="/">UTUNYANGE</a>
+  <div class="d-flex align-items-center gap-2 text-white">
+    <%= user.name %> &middot; Teacher
+    <a href="/dashboard/teacher" class="btn btn-sm btn-outline-light">Dashboard</a>
+    <form class="d-inline" method="post" action="/auth/logout">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn btn-sm btn-outline-light">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<main class="container-fluid px-3 px-lg-4 py-4">
+  <p class="eyebrow">LEARNING MANAGEMENT</p>
+  <h1 class="h3">Lessons &amp; Assignments</h1>
+
+  <% if(notice){ %><div class="alert alert-success"><%= notice %></div><% } %>
+  <% if(error){  %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <div class="row g-4">
+
+    <!-- Create lesson -->
+    <div class="col-xl-6">
+      <section class="panel">
+        <h2 class="h5">Create lesson</h2>
+        <form method="post" action="/dashboard/teacher/lms/lessons" class="row g-2">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="col-12">
+            <label class="form-label">Title</label>
+            <input class="form-control" name="title" required maxlength="200">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Class &amp; subject</label>
+            <select class="form-select" id="lessonAssn" required>
+              <option value="">Choose</option>
+              <% myAssignments.forEach(a=>{ %>
+              <option value="<%= a.class_id %>" data-sub="<%= a.subject_id %>">
+                <%= a.class_name %> &mdash; <%= a.subject_name %>
+              </option>
+              <% }) %>
+            </select>
+            <input type="hidden" name="class_id"   id="lClassId">
+            <input type="hidden" name="subject_id" id="lSubjectId">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Lesson date</label>
+            <input class="form-control" type="date" name="lesson_date">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Content / notes</label>
+            <textarea class="form-control" name="body" rows="5" placeholder="Lesson content, notes, links..."></textarea>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary">Save lesson</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- Create assignment -->
+    <div class="col-xl-6">
+      <section class="panel">
+        <h2 class="h5">Create assignment</h2>
+        <form method="post" action="/dashboard/teacher/lms/assignments" class="row g-2">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="col-12">
+            <label class="form-label">Title</label>
+            <input class="form-control" name="title" required maxlength="200">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Class &amp; subject</label>
+            <select class="form-select" id="assAssn" required>
+              <option value="">Choose</option>
+              <% myAssignments.forEach(a=>{ %>
+              <option value="<%= a.class_id %>" data-sub="<%= a.subject_id %>">
+                <%= a.class_name %> &mdash; <%= a.subject_name %>
+              </option>
+              <% }) %>
+            </select>
+            <input type="hidden" name="class_id"   id="aClassId">
+            <input type="hidden" name="subject_id" id="aSubjectId">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Due date</label>
+            <input class="form-control" type="date" name="due_date" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Max score</label>
+            <input class="form-control" type="number" name="max_score" value="100" min="1" step=".01" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Instructions</label>
+            <textarea class="form-control" name="instructions" rows="4" placeholder="Describe what students must do..."></textarea>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary">Save assignment</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- Lessons list -->
+    <div class="col-12">
+      <section class="panel">
+        <h2 class="h5">My lessons</h2>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead><tr><th>Title</th><th>Class / Subject</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>
+              <% lessons.forEach(l=>{ %>
+              <tr>
+                <td><%= l.title %></td>
+                <td><%= l.class_name %> / <%= l.subject_name %></td>
+                <td><%= l.lesson_date || 'â€”' %></td>
+                <td><span class="badge <%= l.is_published ? 'bg-success' : 'bg-secondary' %>"><%= l.is_published ? 'Published' : 'Draft' %></span></td>
+                <td>
+                  <% if(!l.is_published){ %>
+                  <form method="post" action="/dashboard/teacher/lms/lessons/publish" class="d-inline">
+                    <input type="hidden" name="_csrf"     value="<%= csrfToken %>">
+                    <input type="hidden" name="lesson_id" value="<%= l.id %>">
+                    <button class="btn btn-sm btn-outline-success">Publish</button>
+                  </form>
+                  <% } %>
+                </td>
+              </tr>
+              <% }) %>
+              <% if(!lessons.length){ %>
+              <tr><td colspan="5" class="text-secondary">No lessons yet.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Assignments list -->
+    <div class="col-12">
+      <section class="panel">
+        <h2 class="h5">My assignments</h2>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead><tr><th>Title</th><th>Class / Subject</th><th>Due date</th><th>Max score</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <% assignments.forEach(a=>{ %>
+              <tr>
+                <td><%= a.title %></td>
+                <td><%= a.class_name %> / <%= a.subject_name %></td>
+                <td><%= a.due_date %></td>
+                <td><%= a.max_score %></td>
+                <td><span class="badge <%= a.is_published ? 'bg-success' : 'bg-secondary' %>"><%= a.is_published ? 'Published' : 'Draft' %></span></td>
+                <td class="d-flex gap-1 flex-wrap">
+                  <% if(!a.is_published){ %>
+                  <form method="post" action="/dashboard/teacher/lms/assignments/publish">
+                    <input type="hidden" name="_csrf"         value="<%= csrfToken %>">
+                    <input type="hidden" name="assignment_id" value="<%= a.id %>">
+                    <button class="btn btn-sm btn-outline-success">Publish</button>
+                  </form>
+                  <% } %>
+                  <a href="/dashboard/teacher/lms/assignments/<%= a.id %>/submissions" class="btn btn-sm btn-outline-primary">Submissions</a>
+                </td>
+              </tr>
+              <% }) %>
+              <% if(!assignments.length){ %>
+              <tr><td colspan="6" class="text-secondary">No assignments yet.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+  </div><!-- /row -->
+</main>
+
+<script>
+document.getElementById('lessonAssn').addEventListener('change', e => {
+  const o = e.target.selectedOptions[0];
+  document.getElementById('lClassId').value   = o?.value        || '';
+  document.getElementById('lSubjectId').value = o?.dataset.sub  || '';
+});
+document.getElementById('assAssn').addEventListener('change', e => {
+  const o = e.target.selectedOptions[0];
+  document.getElementById('aClassId').value   = o?.value        || '';
+  document.getElementById('aSubjectId').value = o?.dataset.sub  || '';
+});
+</script>
+</body>
+</html>

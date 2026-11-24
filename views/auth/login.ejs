@@ -1,0 +1,13 @@
+<%- include('../partials/header',{active:''}) %>
+<section class="login-section"><div class="container"><div class="login-card">
+<div class="login-brand"><span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span><span><strong>UTUNYANGE</strong><small>SCHOOL PORTAL</small></span></div>
+<h1>Welcome back</h1><p>Sign in to your school account.</p>
+<% if(error){ %><div class="alert alert-danger"><%= error %></div><% } %>
+<% if(loggedOut){ %><div class="alert alert-success">You have signed out successfully.</div><% } %>
+<form method="POST" action="/auth/login"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<label class="form-label" for="identifier">Email or username</label><input class="form-control mb-3" id="identifier" name="identifier" required autocomplete="username">
+<label class="form-label" for="password">Password</label><input class="form-control mb-3" id="password" name="password" type="password" required autocomplete="current-password">
+<button class="btn btn-primary-gradient w-100" type="submit">Sign in securely <i class="bi bi-arrow-right ms-2"></i></button></form>
+<a class="back-home" href="/"><i class="bi bi-arrow-left me-2"></i>Back to school website</a>
+</div></div></section><%- include('../partials/footer') %>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="/assets/js/main.js"></script>

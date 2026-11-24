@@ -1,0 +1,789 @@
+/* ============================================================
+   UTUNYANGE — Dashboard Stylesheet  (All Roles)
+   Covers: Admin · Teacher · Student · Parent · Staff · LMS
+   ============================================================ */
+
+/* ── 0. Google Fonts ────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap');
+
+/* ── 1. Design Tokens ───────────────────────────────────────── */
+:root {
+  --navy:        #0d2347;
+  --navy-mid:    #12336a;
+  --blue:        #1769aa;
+  --blue-light:  #2e8de8;
+  --blue-pale:   #e8f2fc;
+  --yellow:      #f5c518;
+  --yellow-pale: #fff8e1;
+  --green:       #16a34a;
+  --green-pale:  #dcfce7;
+  --red:         #dc2626;
+  --red-pale:    #fee2e2;
+  --orange:      #ea580c;
+  --orange-pale: #fff0e6;
+  --purple:      #7c3aed;
+  --purple-pale: #ede9fe;
+  --ink:         #1a2a42;
+  --ink-mid:     #334155;
+  --muted:       #64748b;
+  --muted-light: #94a3b8;
+  --line:        #e2e8f0;
+  --line-soft:   #f1f5f9;
+  --white:       #ffffff;
+  --bg:          #f0f4fa;
+
+  --radius-sm:   8px;
+  --radius:      14px;
+  --radius-lg:   20px;
+  --radius-xl:   26px;
+
+  --shadow-xs:   0 1px 4px rgba(13,35,71,.06);
+  --shadow-sm:   0 4px 12px rgba(13,35,71,.08);
+  --shadow:      0 8px 28px rgba(13,35,71,.10);
+  --shadow-lg:   0 20px 55px rgba(13,35,71,.13);
+
+  --nav-h:       64px;
+  --sidebar-w:   240px;
+
+  --transition:  all .18s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── 2. Reset / Base ────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Manrope', 'Inter', sans-serif;
+  color: var(--navy);
+  letter-spacing: -.025em;
+  margin-top: 0;
+}
+
+a { color: var(--blue); text-decoration: none; transition: var(--transition); }
+a:hover { color: var(--blue-light); }
+
+img { max-width: 100%; display: block; }
+
+/* ── 3. Top Navigation Bar ──────────────────────────────────── */
+.app-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  min-height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  background: linear-gradient(110deg, var(--navy) 0%, var(--navy-mid) 50%, #1a4d9e 100%);
+  box-shadow: 0 4px 20px rgba(13,35,71,.25);
+  flex-wrap: wrap;
+}
+
+.app-nav .navbar-brand {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff !important;
+  letter-spacing: -.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+/* Brand badge icon */
+.app-nav .navbar-brand::before {
+  content: "U";
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--yellow);
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.app-nav .text-white {
+  color: rgba(255,255,255,.88) !important;
+  font-size: .88rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Nav role tag */
+.nav-role-tag {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  border-radius: 99px;
+  padding: 3px 10px;
+}
+
+/* Nav buttons */
+.app-nav .btn-outline-light {
+  border-color: rgba(255,255,255,.35);
+  color: rgba(255,255,255,.9);
+  font-size: .8rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.app-nav .btn-outline-light:hover {
+  background: rgba(255,255,255,.18);
+  border-color: rgba(255,255,255,.6);
+  color: #fff;
+}
+
+/* ── 4. Page Layout ─────────────────────────────────────────── */
+main.container,
+main.container-fluid {
+  padding-top: 28px;
+  padding-bottom: 48px;
+}
+
+/* ── 5. Eyebrow Labels ──────────────────────────────────────── */
+.eyebrow {
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 3px;
+  border-radius: 99px;
+  background: var(--yellow);
+}
+
+/* ── 6. Stat Cards ──────────────────────────────────────────── */
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 22px 20px 20px;
+  box-shadow: var(--shadow-sm);
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-light));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* colour accent variants */
+.stat-card.yellow::before { background: linear-gradient(90deg, var(--yellow), #fde047); }
+.stat-card.green::before  { background: linear-gradient(90deg, var(--green),  #4ade80); }
+.stat-card.red::before    { background: linear-gradient(90deg, var(--red),    #f87171); }
+.stat-card.purple::before { background: linear-gradient(90deg, var(--purple), #a78bfa); }
+.stat-card.orange::before { background: linear-gradient(90deg, var(--orange), #fb923c); }
+
+.stat-label {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.stat-number {
+  font-family: 'Manrope', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+  margin-top: 10px;
+}
+
+/* ── 7. Panels / Cards ──────────────────────────────────────── */
+.panel {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 0;
+}
+
+.panel h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panel h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  border-radius: 99px;
+  background: linear-gradient(to bottom, var(--blue), var(--blue-light));
+  flex-shrink: 0;
+}
+
+/* ── 8. Tables ──────────────────────────────────────────────── */
+.table {
+  font-size: .88rem;
+  color: var(--ink-mid);
+  margin-bottom: 0;
+}
+.table > :not(caption) > * > * {
+  padding: .7rem .65rem;
+  vertical-align: middle;
+  border-bottom-color: var(--line-soft);
+}
+.table thead > tr > th {
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--line-soft);
+  border-bottom: 1.5px solid var(--line);
+  white-space: nowrap;
+}
+.table tbody tr:hover { background: var(--blue-pale); }
+.table tbody tr:last-child > td { border-bottom: none; }
+.table-responsive { border-radius: var(--radius); overflow: hidden; }
+
+/* ── 9. Badges ──────────────────────────────────────────────── */
+.badge {
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+
+/* Role pills */
+.role-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.role-pill.admin,
+.role-pill.super_admin { background: #fce7f3; color: #9d174d; }
+.role-pill.teacher     { background: var(--blue-pale); color: #0c4a6e; }
+.role-pill.student     { background: var(--green-pale); color: #14532d; }
+.role-pill.parent      { background: var(--purple-pale); color: #4c1d95; }
+.role-pill.staff       { background: var(--orange-pale); color: #9a3412; }
+
+/* Status dots */
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.status-dot.active    { background: var(--green); }
+.status-dot.inactive  { background: var(--muted-light); }
+.status-dot.suspended { background: var(--red); }
+.status-dot.pending   { background: var(--orange); }
+
+/* Attendance status colors */
+.attendance-present { color: var(--green); font-weight: 700; }
+.attendance-absent  { color: var(--red);   font-weight: 700; }
+.attendance-late    { color: var(--orange); font-weight: 700; }
+.attendance-excused { color: var(--muted);  font-weight: 700; }
+
+/* ── 10. Forms ──────────────────────────────────────────────── */
+.form-label {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--ink-mid);
+  margin-bottom: 5px;
+  letter-spacing: .01em;
+}
+
+.form-control,
+.form-select {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: .9rem;
+  color: var(--ink);
+  min-height: 42px;
+  padding: 9px 13px;
+  background: #fafcff;
+  transition: var(--transition);
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--blue-light);
+  box-shadow: 0 0 0 3px rgba(46,141,232,.14);
+  background: #fff;
+  outline: none;
+}
+.form-control::placeholder { color: var(--muted-light); }
+
+textarea.form-control { min-height: 100px; resize: vertical; }
+
+.form-control-sm,
+.form-select-sm { min-height: 34px; font-size: .82rem; padding: 5px 10px; }
+
+/* Input group */
+.input-group-text {
+  background: var(--line-soft);
+  border-color: var(--line);
+  color: var(--muted);
+  font-size: .85rem;
+}
+
+/* ── 11. Buttons ────────────────────────────────────────────── */
+.btn {
+  font-weight: 700;
+  font-size: .86rem;
+  border-radius: var(--radius-sm);
+  padding: 9px 18px;
+  transition: var(--transition);
+  letter-spacing: .01em;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(23,105,170,.30);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #125d99 0%, var(--blue) 100%);
+  box-shadow: 0 6px 20px rgba(23,105,170,.40);
+  transform: translateY(-1px);
+  color: #fff;
+}
+
+.btn-outline-primary {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: transparent;
+}
+.btn-outline-primary:hover {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+
+.btn-outline-success { border-color: var(--green); color: var(--green); }
+.btn-outline-success:hover { background: var(--green); color: #fff; border-color: var(--green); }
+
+.btn-outline-secondary { border-color: var(--line); color: var(--muted); }
+.btn-outline-secondary:hover { background: var(--line-soft); color: var(--ink); border-color: var(--muted-light); }
+
+.btn-sm {
+  padding: 5px 12px;
+  font-size: .78rem;
+  border-radius: 7px;
+}
+
+/* ── 12. Alert / Notice Bars ────────────────────────────────── */
+.alert {
+  border-radius: var(--radius);
+  font-size: .88rem;
+  font-weight: 500;
+  padding: 13px 18px;
+  border: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.alert-success {
+  background: var(--green-pale);
+  color: #14532d;
+  border-left: 4px solid var(--green);
+}
+.alert-danger {
+  background: var(--red-pale);
+  color: #991b1b;
+  border-left: 4px solid var(--red);
+}
+.alert-warning {
+  background: var(--yellow-pale);
+  color: #78350f;
+  border-left: 4px solid var(--yellow);
+}
+.alert-info {
+  background: var(--blue-pale);
+  color: #0c4a6e;
+  border-left: 4px solid var(--blue-light);
+}
+
+/* ── 13. Notification items ─────────────────────────────────── */
+.notification-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.notification-item:last-child { border-bottom: none; }
+.notification-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--blue-light);
+  margin-top: 6px;
+}
+.notification-item p {
+  margin: 0;
+  font-size: .84rem;
+  color: var(--ink-mid);
+}
+.notification-item small { color: var(--muted-light); font-size: .72rem; }
+
+/* ── 14. Announcement Cards ─────────────────────────────────── */
+article.announcement {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+article.announcement:last-child { border-bottom: none; }
+article.announcement strong {
+  display: block;
+  font-size: .9rem;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+article.announcement p {
+  font-size: .84rem;
+  color: var(--muted);
+  margin: 0 0 4px;
+}
+article.announcement small { color: var(--muted-light); font-size: .72rem; }
+
+/* ── 15. Timetable ──────────────────────────────────────────── */
+.timetable-day-header {
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--navy-mid);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+/* ── 16. Result / Grade Pills ───────────────────────────────── */
+.grade-pill {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: 99px;
+  font-size: .78rem;
+  font-weight: 800;
+}
+.grade-A { background: var(--green-pale);  color: var(--green);  }
+.grade-B { background: var(--blue-pale);   color: var(--blue);   }
+.grade-C { background: var(--yellow-pale); color: #92400e;       }
+.grade-D { background: var(--orange-pale); color: var(--orange); }
+.grade-F { background: var(--red-pale);    color: var(--red);    }
+
+/* ── 17. Progress Bars ──────────────────────────────────────── */
+.progress {
+  height: 7px;
+  border-radius: 99px;
+  background: var(--line);
+  overflow: hidden;
+}
+.progress-bar {
+  background: linear-gradient(90deg, var(--blue), var(--blue-light));
+  border-radius: 99px;
+  transition: width .5s ease;
+}
+
+/* ── 18. LMS Lesson Card ────────────────────────────────────── */
+.lesson-card {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  background: var(--white);
+  transition: var(--transition);
+}
+.lesson-card:hover { border-color: var(--blue-light); box-shadow: var(--shadow-sm); }
+.lesson-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.lesson-card-title {
+  font-weight: 800;
+  font-size: .95rem;
+  color: var(--navy);
+  margin: 0;
+}
+.lesson-card-meta {
+  font-size: .78rem;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.lesson-body {
+  margin-top: 12px;
+  font-size: .88rem;
+  color: var(--ink-mid);
+  background: var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  white-space: pre-wrap;
+  line-height: 1.75;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* ── 19. Assignment Card ────────────────────────────────────── */
+.assignment-card {
+  border: 1.5px solid var(--line);
+  border-left: 4px solid var(--blue);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  background: var(--white);
+  transition: var(--transition);
+}
+.assignment-card.overdue   { border-left-color: var(--red); }
+.assignment-card.submitted { border-left-color: var(--green); }
+.assignment-card.graded    { border-left-color: var(--purple); }
+
+.due-badge {
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: var(--yellow-pale);
+  color: #78350f;
+}
+.due-badge.overdue { background: var(--red-pale); color: var(--red); }
+
+/* ── 20. Empty State ────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted-light);
+}
+.empty-state svg,
+.empty-state .empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: .4;
+}
+.empty-state p { font-size: .88rem; margin: 0; }
+
+/* ── 21. Section Divider ────────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 24px 0;
+}
+
+/* ── 22. Admin Quick-Action Strip ───────────────────────────── */
+.quick-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 11px 18px;
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--ink-mid);
+  text-decoration: none;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.quick-action-btn:hover {
+  border-color: var(--blue-light);
+  color: var(--blue);
+  background: var(--blue-pale);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-xs);
+}
+
+/* ── 23. Page Header Block ──────────────────────────────────── */
+.page-header {
+  margin-bottom: 28px;
+}
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.page-header p {
+  color: var(--muted);
+  font-size: .9rem;
+  margin: 0;
+}
+
+/* ── 24. User Avatar ────────────────────────────────────────── */
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--blue-light));
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+/* ── 25. Info Row (key : value pairs) ───────────────────────── */
+.info-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.info-row dt {
+  width: 40%;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.info-row dd {
+  width: 60%;
+  font-size: .88rem;
+  color: var(--ink-mid);
+  padding: 10px 0 10px 12px;
+  border-bottom: 1px solid var(--line-soft);
+  margin: 0;
+}
+.info-row dt:last-of-type,
+.info-row dd:last-child { border-bottom: none; }
+
+/* ── 26. Child Card (parent dashboard) ─────────────────────── */
+.child-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--blue-pale);
+  border-radius: var(--radius);
+  border: 1px solid #c8def3;
+  transition: var(--transition);
+}
+.child-card:hover { box-shadow: var(--shadow-sm); }
+.child-card-name  { font-weight: 800; font-size: .92rem; color: var(--navy); margin: 0; }
+.child-card-meta  { font-size: .78rem; color: var(--muted); margin: 2px 0 0; }
+
+/* ── 27. Submissions view ───────────────────────────────────── */
+.submission-row {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.submission-row.graded { border-left: 4px solid var(--green); }
+
+/* ── 28. Responsive ─────────────────────────────────────────── */
+@media (max-width: 991.98px) {
+  .app-nav { padding: 0 16px; gap: 10px; }
+  main.container, main.container-fluid { padding-left: 14px; padding-right: 14px; }
+  .stat-number { font-size: 1.9rem; }
+  .panel { padding: 18px; }
+}
+
+@media (max-width: 575.98px) {
+  .app-nav .navbar-brand { font-size: 1rem; }
+  .stat-number { font-size: 1.65rem; }
+  .stat-card   { padding: 16px; }
+  .panel       { padding: 14px; }
+  .btn         { padding: 8px 14px; font-size: .82rem; }
+  .table > :not(caption) > * > * { padding: .55rem .45rem; font-size: .82rem; }
+  .lesson-body { max-height: 150px; }
+  .info-row dt,
+  .info-row dd { width: 100%; border-bottom: none; padding: 4px 0; }
+  .info-row dt { font-size: .7rem; color: var(--muted-light); }
+}
+
+/* ── 29. Dark mode (prefers-color-scheme) ───────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:         #0f172a;
+    --white:      #1e293b;
+    --line:       #2d3f5a;
+    --line-soft:  #1e2f47;
+    --ink:        #e2e8f0;
+    --ink-mid:    #cbd5e1;
+    --muted:      #94a3b8;
+    --muted-light:#64748b;
+    --navy:       #bfdbfe;
+    --blue-pale:  #0c1f38;
+    --green-pale: #052e16;
+    --red-pale:   #2d0a0a;
+    --yellow-pale:#1c1200;
+    --purple-pale:#1a0938;
+    --orange-pale:#1a0a00;
+  }
+  .app-nav { background: linear-gradient(110deg, #040d1e, #0a1f3d); }
+  .form-control, .form-select { background: #0f1e35; }
+  .table thead > tr > th { background: #131f35; }
+  .table tbody tr:hover   { background: #0d1c30; }
+}
+
+/* ── 30. Print ──────────────────────────────────────────────── */
+@media print {
+  .app-nav, .btn, form { display: none !important; }
+  body { background: #fff; color: #000; }
+  .panel, .stat-card { box-shadow: none; border: 1px solid #ccc; }
+}

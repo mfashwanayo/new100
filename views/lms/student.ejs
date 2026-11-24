@@ -1,0 +1,109 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title><%= title %> | UTUNYANGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/dashboards.css">
+</head>
+<body>
+<nav class="navbar navbar-dark app-nav px-3">
+  <a class="navbar-brand fw-bold" href="/">UTUNYANGE</a>
+  <div class="d-flex align-items-center gap-2 text-white">
+    <%= user.name %> &middot; Student
+    <a href="/dashboard/student" class="btn btn-sm btn-outline-light">Dashboard</a>
+    <form class="d-inline" method="post" action="/auth/logout">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn btn-sm btn-outline-light">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <p class="eyebrow">MY LEARNING</p>
+  <h1 class="h3">Lessons &amp; Assignments</h1>
+
+  <% if(notice){ %><div class="alert alert-success"><%= notice %></div><% } %>
+  <% if(error){  %><div class="alert alert-danger"><%= error %></div><% } %>
+
+  <div class="row g-4">
+
+    <!-- Lessons -->
+    <div class="col-12">
+      <section class="panel">
+        <h2 class="h5">Published lessons</h2>
+        <% if(!lessons.length){ %>
+        <p class="text-secondary">No lessons published yet.</p>
+        <% } %>
+        <% lessons.forEach(l=>{ %>
+        <article class="mb-4 border-bottom pb-3">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <strong><%= l.title %></strong>
+              <small class="d-block text-secondary"><%= l.subject_name %> &middot; Teacher: <%= l.teacher_name %> &middot; <%= l.lesson_date || '' %></small>
+            </div>
+          </div>
+          <% if(l.body){ %>
+          <div class="mt-2 p-3 bg-light rounded" style="white-space:pre-wrap"><%= l.body %></div>
+          <% } %>
+        </article>
+        <% }) %>
+      </section>
+    </div>
+
+    <!-- Assignments -->
+    <div class="col-12">
+      <section class="panel">
+        <h2 class="h5">Assignments</h2>
+        <% if(!assignments.length){ %>
+        <p class="text-secondary">No assignments yet.</p>
+        <% } %>
+        <% assignments.forEach(a=>{ %>
+        <article class="mb-4 border-bottom pb-3">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+              <strong><%= a.title %></strong>
+              <small class="d-block text-secondary">
+                <%= a.subject_name %> &middot; Due: <strong><%= a.due_date %></strong> &middot; Max score: <%= a.max_score %>
+              </small>
+            </div>
+            <% if(a.score != null){ %>
+            <span class="badge bg-success fs-6">Score: <%= a.score %> / <%= a.max_score %></span>
+            <% } else if(a.submitted_at){ %>
+            <span class="badge bg-warning text-dark">Submitted &mdash; awaiting grade</span>
+            <% } %>
+          </div>
+
+          <% if(a.instructions){ %>
+          <p class="mt-2 mb-2"><%= a.instructions %></p>
+          <% } %>
+
+          <% if(a.feedback){ %>
+          <div class="alert alert-info py-1 mt-2">Teacher feedback: <%= a.feedback %></div>
+          <% } %>
+
+          <!-- Submit form (hide if already graded) -->
+          <% if(a.score == null){ %>
+          <form method="post" action="/dashboard/student/lms/submit" class="mt-2 row g-2">
+            <input type="hidden" name="_csrf"         value="<%= csrfToken %>">
+            <input type="hidden" name="assignment_id" value="<%= a.id %>">
+            <div class="col-12">
+              <label class="form-label">Your answer</label>
+              <textarea class="form-control" name="answer_text" rows="4" required placeholder="Write your answer here..."><%= a.submitted_at ? '' : '' %></textarea>
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-primary btn-sm"><%= a.submitted_at ? 'Update submission' : 'Submit' %></button>
+            </div>
+          </form>
+          <% } %>
+        </article>
+        <% }) %>
+      </section>
+    </div>
+
+  </div>
+</main>
+</body>
+</html>
